@@ -1,5 +1,5 @@
 # Скрипт автоматизации сбора метрик ПК для диплома
-$portName = "COM3" 
+$portName = "COM6" 
 $baudRate = 9600
 
 try {
