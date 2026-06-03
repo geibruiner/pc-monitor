@@ -7,11 +7,11 @@ try {
     $port.Open()
     
     while ($true) {
-        # 1. Нагрузка CPU
+        #Нагрузка процессора
         $cpuLoad = (Get-CimInstance Win32_Processor).LoadPercentage
         if ($cpuLoad -eq $null) { $cpuLoad = 0 }
 
-        # 2. Температура CPU (берем среднюю через WMI MSAcpi)
+        # Температура процессороа собираем среднюю через WMI MSAcpi
         $cpuTempRaw = (Get-CimInstance -Namespace root\wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue).CurrentTemperature
         if ($cpuTempRaw) {
             # Конвертируем из Кельвинов*10 в Цельсии
@@ -20,11 +20,11 @@ try {
             $cpuTemp = 42 # Заглушка-демонстрация, если материнка блокирует прямой доступ
         }
 
-        # 3. Нагрузка RAM %
+        # 3. Нагрузка оперативки в %
         $osInfo = Get-CimInstance Win32_OperatingSystem
         $usedRAM = [Math]::Round((($osInfo.TotalVisibleMemorySize - $osInfo.FreePhysicalMemory) / $osInfo.TotalVisibleMemorySize) * 100)
 
-        # 4. Данные GPU (Нагрузка и Температура)
+        # 4. Данные видеокарты (Нагрузка и Температура)
         # Проверяем стандартный счетчик Windows для видеокарты
         $gpuLoadRaw = (Get-Counter '\GPU Engine(*)\Utilisation Percentage' -ErrorAction SilentlyContinue).CounterSamples | Measure-Object -Property CookedValue -Max
         if ($gpuLoadRaw.Maximum) {
